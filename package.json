@@ -1,0 +1,10 @@
+{
+  "name": "peerjs-signal",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "npx peerjs --port $PORT --path /"
+  },
+  "dependencies": {
+    "peer": "^1.0.2"
+  }
+}
