@@ -1,4 +1,4 @@
-1. Open the Blade & Shield HTML file in your browser (index.html).
+1. Open the Blade & Shield HTML file in your browser [(index.html)](https://yatoalma.github.io/BladeAndShield1/).
 
 2. Check the ⚙️ Advanced: custom signaling server toggle.
 
