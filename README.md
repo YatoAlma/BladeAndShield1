@@ -78,10 +78,10 @@ Sometimes friends run shared servers. If you know the host, port, and path, just
      }
    - **`server.js`**
      ''' server.js (can be empty)
-     Set the Start Command to npm start and use the Free instance type.
-
-3. Once deployed, you’ll get a URL like https://your-service.onrender.com.
-4. In the game’s Advanced panel, enter:
+     
+3. Set the Start Command to npm start and use the Free instance type.
+4. Once deployed, you’ll get a URL like https://your-service.onrender.com.
+5. In the game’s Advanced panel, enter:
 - Host: your-service.onrender.com
 - Port: 443
 - Path: /
