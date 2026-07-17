@@ -101,6 +101,7 @@ Fonts: Google Fonts (Cinzel, Inter)
 
 
 🤝 Credits
+
 Built with ❤️ as a showcase of browser‑based P2P gaming.
 No accounts, no tracking, no ads. Just you and your opponent.
 
