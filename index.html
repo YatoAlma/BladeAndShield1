@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blade &amp; Shield</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#0d0f16;
+    --bg-1:#161926;
+    --bg-2:#1e2233;
+    --line:#2b3049;
+    --steel:#9fb3c8;
+    --steel-dim:#5c6a80;
+    --gold:#d1a83a;
+    --gold-soft:#e9c96b;
+    --truth:#3aa564;
+    --truth-deep:#1f7a45;
+    --bluff:#c9494b;
+    --bluff-deep:#93262a;
+    --gamble:#d1a83a;
+    --gamble-deep:#9a7621;
+    --text-0:#f0f2f7;
+    --text-1:#b7bfd1;
+    --text-2:#7c85a0;
+    --danger:#e05a5a;
+    --radius-s:8px;
+    --radius-m:14px;
+    --radius-l:22px;
+    --font-display:'Cinzel', serif;
+    --font-body:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+ 
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body{ height:100%; }
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, #232948 0%, transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 110%, #241a22 0%, transparent 55%),
+      var(--bg-0);
+    color:var(--text-0);
+    font-family:var(--font-body);
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+ 
+  #app{
+    max-width:480px;
+    margin:0 auto;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+  }
+ 
+  .hidden{ display:none !important; }
+ 
+  /* ---------- Connect Screen ---------- */
+  #connectScreen{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:32px 22px 40px;
+    gap:18px;
+    text-align:center;
+  }
+  .crest{ width:56px; height:56px; opacity:.9; margin-bottom:2px; }
+  .crest svg{ width:100%; height:100%; }
+  .title{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:2.15rem;
+    letter-spacing:.04em;
+    margin:0;
+    color:var(--text-0);
+    text-shadow:0 0 24px rgba(159,179,200,.25);
+  }
+  .title .amp{ color:var(--gold-soft); font-style:italic; }
+  .subtitle{
+    margin:0 0 6px;
+    color:var(--text-2);
+    font-size:.85rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+  }
+ 
+  .panel{
+    width:100%;
+    background:linear-gradient(180deg, var(--bg-2), var(--bg-1));
+    border:1px solid var(--line);
+    border-radius:var(--radius-m);
+    padding:14px 16px;
+    text-align:left;
+  }
+  .panel-label{
+    display:block;
+    font-size:.7rem;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--text-2);
+    margin-bottom:8px;
+  }
+  .id-row{ display:flex; gap:8px; align-items:center; }
+  .id-value{
+    flex:1;
+    font-family:var(--font-mono);
+    font-size:1rem;
+    color:var(--gold-soft);
+    background:rgba(0,0,0,.25);
+    border:1px solid var(--line);
+    border-radius:var(--radius-s);
+    padding:9px 10px;
+    overflow-x:auto;
+    white-space:nowrap;
+  }
+  .id-input{
+    flex:1;
+    font-family:var(--font-mono);
+    font-size:1rem;
+    color:var(--text-0);
+    background:rgba(0,0,0,.25);
+    border:1px solid var(--line);
+    border-radius:var(--radius-s);
+    padding:9px 10px;
+    min-width:0;
+  }
+  .id-input::placeholder{ color:var(--text-2); }
+  .id-input:focus, .id-value:focus{ outline:2px solid var(--steel); outline-offset:1px; }
+ 
+  .btn{
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:.88rem;
+    border:none;
+    border-radius:var(--radius-s);
+    padding:10px 16px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:transform .08s ease, filter .15s ease, opacity .15s ease;
+  }
+  .btn:active{ transform:scale(.96); }
+  .btn:disabled{ opacity:.4; cursor:not-allowed; }
+  .btn-primary{ background:linear-gradient(180deg, var(--gold-soft), var(--gold)); color:#241a05; }
+  .btn-primary:hover:not(:disabled){ filter:brightness(1.08); }
+  .btn-ghost{ background:rgba(159,179,200,.12); color:var(--steel); border:1px solid var(--line); }
+  .btn-ghost:hover{ background:rgba(159,179,200,.2); }
+  .btn-truth{ background:linear-gradient(180deg, #4bbf7d, var(--truth-deep)); color:#08240f; }
+  .btn-bluff{ background:linear-gradient(180deg, #e06264, var(--bluff-deep)); color:#2a0708; }
+ 
+  .status-line{
+    min-height:1.2em;
+    font-size:.85rem;
+    color:var(--text-2);
+    margin:0;
+  }
+  .status-line.error{ color:var(--danger); }
+  .status-line.diag{ font-family:var(--font-mono); font-size:.72rem; color:var(--text-2); line-height:1.5; white-space:pre-wrap; text-align:left; }
+ 
+  /* ---------- Game Screen ---------- */
+  #gameScreen{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    padding:14px 14px 18px;
+    gap:10px;
+  }
+ 
+  .hp-row{ padding:2px 2px; }
+  .hp-row-top{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:5px;
+    font-size:.72rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--text-2);
+  }
+  .hp-row-top .who{ font-weight:700; color:var(--text-1); }
+  .peer-tag{
+    font-family:var(--font-mono);
+    font-size:.68rem;
+    color:var(--text-2);
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    max-width:120px;
+  }
+  .block-tag{
+    margin-left:auto;
+    background:rgba(159,179,200,.14);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:2px 9px;
+    color:var(--steel);
+    font-weight:600;
+    font-size:.72rem;
+  }
+  .hp-track{
+    position:relative;
+    height:16px;
+    background:#000a;
+    border:1px solid var(--line);
+    border-radius:999px;
+    overflow:hidden;
+  }
+  .hp-fill{
+    height:100%;
+    width:100%;
+    background:linear-gradient(90deg, var(--truth-deep), var(--truth));
+    transition:width .5s cubic-bezier(.4,0,.2,1), background .3s ease;
+  }
+  .hp-fill.low{ background:linear-gradient(90deg, var(--bluff-deep), var(--bluff)); animation:pulse-low 1.1s ease-in-out infinite; }
+  @keyframes pulse-low{ 0%,100%{ filter:brightness(1); } 50%{ filter:brightness(1.35); } }
+  .hp-text{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:.66rem;
+    font-weight:700;
+    color:#fff;
+    text-shadow:0 1px 2px rgba(0,0,0,.8);
+    letter-spacing:.03em;
+  }
+ 
+  #arena{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+    position:relative;
+    padding:14px 6px;
+  }
+  #arena::before{
+    content:"";
+    position:absolute;
+    inset:8% 4%;
+    background:
+      linear-gradient(135deg, transparent 47%, rgba(159,179,200,.06) 49%, rgba(159,179,200,.06) 51%, transparent 53%),
+      linear-gradient(45deg, transparent 47%, rgba(159,179,200,.06) 49%, rgba(159,179,200,.06) 51%, transparent 53%);
+    pointer-events:none;
+    border-radius:var(--radius-l);
+  }
+  .status-text{
+    margin:0;
+    font-size:.86rem;
+    text-align:center;
+    color:var(--text-1);
+    min-height:1.4em;
+    padding:0 8px;
+    position:relative;
+    z-index:1;
+  }
+ 
+  .set-area{
+    display:flex;
+    gap:10px;
+    position:relative;
+    z-index:1;
+  }
+  .set-slot{
+    width:64px;
+    height:90px;
+    border-radius:var(--radius-m);
+    border:2px dashed var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(255,255,255,.02);
+    transition:border-color .15s ease, background .15s ease, transform .1s ease;
+  }
+  .set-slot .slot-hint{ font-size:.68rem; color:var(--text-2); letter-spacing:.08em; text-transform:uppercase; }
+  .set-slot.drop-hover{ border-color:var(--gold-soft); background:rgba(209,168,58,.12); }
+  .set-slot.reject{ animation:shake .3s ease; border-color:var(--danger); }
+  .set-slot.filled{ border-style:solid; }
+  .set-slot.waiting{ opacity:.5; }
+ 
+  @keyframes shake{
+    0%,100%{ transform:translateX(0); }
+    25%{ transform:translateX(-4px); }
+    75%{ transform:translateX(4px); }
+  }
+ 
+  .gamble-slot{
+    width:78px;
+    height:56px;
+    border-radius:var(--radius-m);
+    border:2px dashed var(--gamble-deep);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(209,168,58,.05);
+    position:relative;
+    z-index:1;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .gamble-slot .gamble-hint{ font-size:.62rem; color:var(--gamble); letter-spacing:.08em; text-transform:uppercase; }
+  .gamble-slot.drop-hover{ border-color:var(--gold-soft); background:rgba(209,168,58,.18); }
+  .gamble-slot.reject{ animation:shake .3s ease; border-color:var(--danger); }
+  .gamble-slot.filled{ border-style:solid; }
+ 
+  .card{
+    width:56px;
+    height:80px;
+    border-radius:var(--radius-s);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:1.5rem;
+    color:#fff;
+    box-shadow:0 4px 10px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.15);
+    user-select:none;
+    touch-action:none;
+    cursor:grab;
+    position:relative;
+  }
+  .card.small{ width:44px; height:64px; font-size:1.1rem; }
+  .card.truth{ background:linear-gradient(160deg, #4bbf7d, var(--truth-deep)); }
+  .card.bluff{ background:linear-gradient(160deg, #e06264, var(--bluff-deep)); }
+  .card.gamble{ background:linear-gradient(160deg, var(--gold-soft), var(--gamble-deep)); text-shadow:0 1px 3px rgba(0,0,0,.5); }
+  .card.back{
+    background:linear-gradient(160deg, #3a3f52, #21243233);
+    background-color:#2a2e3f;
+    color:var(--text-2);
+    font-size:1.3rem;
+    cursor:default;
+  }
+  .card.placeholder-empty{ visibility:hidden; }
+  .card.removable::after{
+    content:"✕";
+    position:absolute;
+    top:-6px; right:-6px;
+    width:18px; height:18px;
+    border-radius:50%;
+    background:#000a;
+    color:#fff;
+    font-size:.6rem;
+    display:flex; align-items:center; justify-content:center;
+    border:1px solid var(--line);
+  }
+ 
+  .dragging-ghost{
+    position:fixed;
+    z-index:999;
+    pointer-events:none;
+    opacity:.92;
+    transform:scale(1.06) rotate(-2deg);
+    box-shadow:0 10px 24px rgba(0,0,0,.55);
+  }
+  .drag-source-hidden{ opacity:.25; }
+ 
+  .call-buttons{
+    display:flex;
+    gap:12px;
+    position:relative;
+    z-index:1;
+  }
+  .call-buttons .btn{ padding:12px 20px; font-size:.95rem; }
+ 
+  #confirmSetBtn{ position:relative; z-index:1; padding:11px 26px; }
+  .set-caption{
+    margin:0;
+    font-size:.68rem;
+    color:var(--text-2);
+    text-align:center;
+    position:relative;
+    z-index:1;
+  }
+ 
+  .self-bar{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .hand-area{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    min-height:88px;
+    align-items:flex-end;
+    flex-wrap:wrap;
+  }
+ 
+  .new-game-btn{ align-self:center; margin-top:4px; }
+ 
+  /* ---------- Overlays ---------- */
+  .overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(6,7,12,.86);
+    backdrop-filter:blur(2px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:50;
+    padding:24px;
+  }
+  .reveal-banner{
+    background:linear-gradient(180deg, var(--bg-2), var(--bg-1));
+    border:1px solid var(--line);
+    border-radius:var(--radius-l);
+    padding:22px 24px;
+    max-width:360px;
+    width:100%;
+    text-align:center;
+    box-shadow:0 20px 50px rgba(0,0,0,.5);
+  }
+  .reveal-cards{ display:flex; justify-content:center; gap:8px; margin:14px 0; }
+  .reveal-line{ margin:6px 0; font-size:.95rem; color:var(--text-1); }
+  .reveal-line.headline{ font-family:var(--font-display); font-size:1.15rem; color:var(--gold-soft); font-weight:700; }
+  .reveal-line.effect{ color:var(--text-0); font-weight:600; }
+ 
+  .end-card{
+    background:linear-gradient(180deg, var(--bg-2), var(--bg-1));
+    border:1px solid var(--line);
+    border-radius:var(--radius-l);
+    padding:32px 26px;
+    text-align:center;
+    max-width:340px;
+    width:100%;
+  }
+  #endTitle{
+    font-family:var(--font-display);
+    font-size:1.8rem;
+    margin:0 0 18px;
+    color:var(--gold-soft);
+  }
+ 
+  /* --- Advanced Server Panel --- */
+  .toggle-label{
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    cursor: pointer;
+    color: var(--steel);
+    font-size: 0.85rem;
+    user-select: none;
+  }
+  .toggle-label input[type="checkbox"]{
+    appearance: none;
+    width: 2em;
+    height: 1.2em;
+    background: var(--line);
+    border-radius: 999px;
+    position: relative;
+    transition: background 0.2s;
+  }
+  .toggle-label input[type="checkbox"]:checked{
+    background: var(--gold);
+  }
+  .toggle-label input[type="checkbox"]::after{
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: calc(1.2em - 4px);
+    height: calc(1.2em - 4px);
+    border-radius: 50%;
+    background: #fff;
+    transition: transform 0.2s;
+  }
+  .toggle-label input[type="checkbox"]:checked::after{
+    transform: translateX(0.8em);
+  }
+  .advanced-fields{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    margin-top: 0.8em;
+  }
+  .advanced-fields input, .advanced-fields select{
+    flex: 1 1 100px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-s);
+    padding: 0.5em;
+    color: var(--text-0);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+  .advanced-fields label{
+    display: flex;
+    align-items: center;
+    gap: 0.3em;
+    color: var(--text-2);
+    font-size: 0.75rem;
+  }
+ 
+  @media (max-width:360px){
+    .card{ width:48px; height:70px; font-size:1.25rem; }
+    .set-slot{ width:54px; height:78px; }
+    .title{ font-size:1.8rem; }
+  }
+  @media (min-width:480px){
+    .card{ width:62px; height:88px; }
+    .set-slot{ width:70px; height:98px; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+ 
+  <section id="connectScreen" class="screen">
+    <div class="crest" aria-hidden="true">
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M32 4 L46 12 V30 C46 44 38 52 32 58 C26 52 18 44 18 30 V12 Z" stroke="#9fb3c8" stroke-width="1.6"/>
+        <path d="M20 46 L44 18 M44 46 L20 18" stroke="#d1a83a" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <h1 class="title">Blade <span class="amp">&amp;</span> Shield</h1>
+    <p class="subtitle">A duel of truth and treachery</p>
+ 
+    <div class="panel">
+      <label class="panel-label">Your Peer ID</label>
+      <div class="id-row">
+        <span id="myId" class="id-value" tabindex="0">generating…</span>
+        <button id="copyIdBtn" class="btn btn-ghost" type="button">Copy</button>
+      </div>
+    </div>
+ 
+    <div class="panel">
+      <label class="panel-label" for="remoteIdInput">Opponent's Peer ID</label>
+      <div class="id-row">
+        <input id="remoteIdInput" class="id-input" type="text" placeholder="Paste ID here" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <button id="connectBtn" class="btn btn-primary" type="button">Connect</button>
+      </div>
+    </div>
+ 
+    <!-- 🔧 Advanced Server Panel (Claude's addition) -->
+    <div class="panel">
+      <label class="toggle-label">
+        <input type="checkbox" id="toggleAdvanced">
+        <span>⚙️ Advanced: custom signaling server</span>
+      </label>
+      <div id="advancedFields" class="advanced-fields hidden">
+        <label>Host <input id="advHost" type="text" placeholder="myserver.com" value=""></label>
+        <label>Port <input id="advPort" type="number" placeholder="443" value=""></label>
+        <label>Path <input id="advPath" type="text" placeholder="/" value=""></label>
+        <label>
+          <input type="checkbox" id="advSecure" checked> Secure (HTTPS)
+        </label>
+        <button id="saveAdvBtn" class="btn btn-ghost" type="button">Save</button>
+        <button id="clearAdvBtn" class="btn btn-ghost" type="button">Use Default</button>
+      </div>
+    </div>
+ 
+    <p id="connectStatus" class="status-line"></p>
+    <p id="diagLine" class="status-line diag"></p>
+    <button id="retryPeerBtn" class="btn btn-ghost hidden" type="button">Retry Connection</button>
+  </section>
+ 
+  <section id="gameScreen" class="screen hidden">
+    <header class="hp-row opponent">
+      <div class="hp-row-top">
+        <span class="who">Opponent</span>
+        <span id="oppIdText" class="peer-tag"></span>
+        <span id="oppBlockLabel" class="block-tag">🛡 0</span>
+      </div>
+      <div class="hp-track">
+        <div id="oppHpFill" class="hp-fill"></div>
+        <span id="oppHpText" class="hp-text">20 / 20</span>
+      </div>
+    </header>
+ 
+    <main id="arena">
+      <p id="statusText" class="status-text">Connecting…</p>
+ 
+      <div id="setArea" class="set-area">
+        <div class="set-slot" data-slot="0"><span class="slot-hint">Set</span></div>
+        <div class="set-slot" data-slot="1"><span class="slot-hint">Set</span></div>
+        <div class="set-slot" data-slot="2"><span class="slot-hint">Set</span></div>
+      </div>
+ 
+      <div id="gambleSlot" class="gamble-slot"><span class="gamble-hint">Gamble</span></div>
+ 
+      <p id="setCaption" class="set-caption hidden">Need at least 1 Bluff or Gamble among the 3</p>
+ 
+      <div id="callButtons" class="call-buttons hidden">
+        <button id="callTruthsBtn" class="btn btn-truth" type="button">Call Truths</button>
+        <button id="callBluffsBtn" class="btn btn-bluff" type="button">Call Bluffs</button>
+      </div>
+ 
+      <button id="confirmSetBtn" class="btn btn-primary hidden" type="button" disabled>Confirm Set</button>
+    </main>
+ 
+    <footer class="self-bar">
+      <div id="handArea" class="hand-area"></div>
+      <div class="hp-row self">
+        <div class="hp-row-top">
+          <span class="who">You</span>
+          <span id="myBlockLabel" class="block-tag">🛡 0</span>
+        </div>
+        <div class="hp-track">
+          <div id="myHpFill" class="hp-fill"></div>
+          <span id="myHpText" class="hp-text">20 / 20</span>
+        </div>
+      </div>
+      <button id="newGameBtn" class="btn btn-ghost new-game-btn" type="button">New Game</button>
+    </footer>
+  </section>
+ 
+  <div id="revealOverlay" class="overlay hidden">
+    <div id="revealBanner" class="reveal-banner"></div>
+  </div>
+ 
+  <div id="endOverlay" class="overlay hidden">
+    <div class="end-card">
+      <h2 id="endTitle"></h2>
+      <button id="endNewGameBtn" class="btn btn-primary" type="button">New Game</button>
+    </div>
+  </div>
+ 
+</div>
+ 
+<script>
+(function(){
+  'use strict';
+ 
+  /* ===================== DOM refs ===================== */
+  var connectScreen = document.getElementById('connectScreen');
+  var gameScreen = document.getElementById('gameScreen');
+  var myIdEl = document.getElementById('myId');
+  var remoteIdInput = document.getElementById('remoteIdInput');
+  var connectBtn = document.getElementById('connectBtn');
+  var copyIdBtn = document.getElementById('copyIdBtn');
+  var connectStatus = document.getElementById('connectStatus');
+  var diagLine = document.getElementById('diagLine');
+  var retryPeerBtn = document.getElementById('retryPeerBtn');
+ 
+  var statusText = document.getElementById('statusText');
+  var setSlotEls = Array.prototype.slice.call(document.querySelectorAll('.set-slot'));
+  var gambleSlotEl = document.getElementById('gambleSlot');
+  var setCaption = document.getElementById('setCaption');
+  var callButtons = document.getElementById('callButtons');
+  var callTruthsBtn = document.getElementById('callTruthsBtn');
+  var callBluffsBtn = document.getElementById('callBluffsBtn');
+  var confirmSetBtn = document.getElementById('confirmSetBtn');
+  var handArea = document.getElementById('handArea');
+  var newGameBtn = document.getElementById('newGameBtn');
+ 
+  var oppIdText = document.getElementById('oppIdText');
+  var oppHpFill = document.getElementById('oppHpFill');
+  var oppHpText = document.getElementById('oppHpText');
+  var oppBlockLabel = document.getElementById('oppBlockLabel');
+  var myHpFill = document.getElementById('myHpFill');
+  var myHpText = document.getElementById('myHpText');
+  var myBlockLabel = document.getElementById('myBlockLabel');
+ 
+  var revealOverlay = document.getElementById('revealOverlay');
+  var revealBanner = document.getElementById('revealBanner');
+  var endOverlay = document.getElementById('endOverlay');
+  var endTitle = document.getElementById('endTitle');
+  var endNewGameBtn = document.getElementById('endNewGameBtn');
+ 
+  // 🔧 Advanced server DOM
+  var toggleAdvanced = document.getElementById('toggleAdvanced');
+  var advancedFields = document.getElementById('advancedFields');
+  var advHost = document.getElementById('advHost');
+  var advPort = document.getElementById('advPort');
+  var advPath = document.getElementById('advPath');
+  var advSecure = document.getElementById('advSecure');
+  var saveAdvBtn = document.getElementById('saveAdvBtn');
+  var clearAdvBtn = document.getElementById('clearAdvBtn');
+ 
+  /* ===================== Networking state ===================== */
+  var peer = null;
+  var conn = null;
+  var amIHost = false;
+  var everConnectedToServer = false;
+  var peerGeneration = 0;
+ 
+  /* ===================== Game state ===================== */
+  var myHP = 20, oppHP = 20, myBlock = 0, oppBlock = 0;
+  var myDeck = [], myDiscard = [], myHand = [];
+  var setSlots = [null, null, null];
+  var gambleCard = null;
+ 
+  var myRole = null;        // 'setter' | 'caller'
+  var gamePhase = 'IDLE';   // SETTING, WAITING_FOR_CALL, WAITING_FOR_SET, CALLING, WAITING_FOR_RESULT, REVEAL, GAMEOVER, DISCONNECTED
+ 
+  var pendingResolution = null;
+  var pendingSetCards = null;
+  var pendingGambleUsed = false;
+ 
+  var uidCounter = 0;
+  function uid(){ return 'c' + (uidCounter++); }
+ 
+  /* ===================== Advanced server persistence ===================== */
+  var STORAGE_KEY = 'bladeShieldAdvancedServer';
+ 
+  function loadServerConfig(){
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        var cfg = JSON.parse(raw);
+        if (cfg && cfg.host) {
+          advHost.value = cfg.host || '';
+          advPort.value = cfg.port || '';
+          advPath.value = cfg.path || '/';
+          advSecure.checked = cfg.secure !== false;
+          toggleAdvanced.checked = true;
+          advancedFields.classList.remove('hidden');
+          return cfg;
+        }
+      }
+    } catch(e){}
+    return null;
+  }
+ 
+  function saveServerConfig(){
+    var cfg = {
+      host: advHost.value.trim(),
+      port: Number(advPort.value) || 443,
+      path: advPath.value.trim() || '/',
+      secure: advSecure.checked
+    };
+    if (!cfg.host) {
+      localStorage.removeItem(STORAGE_KEY);
+      return null;
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg));
+    return cfg;
+  }
+ 
+  function getServerConfig(){
+    if (toggleAdvanced.checked) {
+      var host = advHost.value.trim();
+      if (host) {
+        return {
+          host: host,
+          port: Number(advPort.value) || 443,
+          path: advPath.value.trim() || '/',
+          secure: advSecure.checked
+        };
+      }
+    }
+    return null; // use default 0.peerjs.com
+  }
+ 
+  // Toggle advanced visibility
+  toggleAdvanced.addEventListener('change', function(){
+    if (this.checked) {
+      advancedFields.classList.remove('hidden');
+      loadServerConfig(); // populate fields from storage
+    } else {
+      advancedFields.classList.add('hidden');
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  });
+ 
+  saveAdvBtn.addEventListener('click', function(){
+    saveServerConfig();
+    connectStatus.textContent = 'Custom server saved. Reconnecting…';
+    connectStatus.classList.remove('error');
+    initPeer(); // reinitialize with new config
+  });
+ 
+  clearAdvBtn.addEventListener('click', function(){
+    localStorage.removeItem(STORAGE_KEY);
+    advHost.value = '';
+    advPort.value = '';
+    advPath.value = '/';
+    advSecure.checked = true;
+    toggleAdvanced.checked = false;
+    advancedFields.classList.add('hidden');
+    connectStatus.textContent = 'Using default server. Reconnecting…';
+    connectStatus.classList.remove('error');
+    initPeer();
+  });
+ 
+  // Load saved config on startup
+  loadServerConfig();
+ 
+  /* ===================== Deck helpers ===================== */
+  function freshDeckTypes(){
+    var arr = [];
+    var i;
+    for(i=0;i<14;i++) arr.push('truth');
+    for(i=0;i<10;i++) arr.push('bluff');
+    for(i=0;i<6;i++) arr.push('gamble');
+    return arr;
+  }
+  function shuffle(arr){
+    var a = arr.slice();
+    for(var i=a.length-1;i>0;i--){
+      var j = Math.floor(Math.random()*(i+1));
+      var tmp = a[i]; a[i]=a[j]; a[j]=tmp;
+    }
+    return a;
+  }
+  function drawToFive(){
+    while(myHand.length < 5){
+      if(myDeck.length === 0){
+        if(myDiscard.length === 0) break;
+        myDeck = shuffle(myDiscard);
+        myDiscard = [];
+      }
+      var t = myDeck.pop();
+      myHand.push({ id: uid(), type: t });
+    }
+  }
+  function cardLabel(type){ return type === 'truth' ? 'T' : (type === 'bluff' ? 'B' : 'G'); }
+ 
+  /* ===================== Networking setup ===================== */
+  function setConnectStatus(msg, isError){
+    connectStatus.textContent = msg;
+    connectStatus.classList.toggle('error', !!isError);
+  }
+ 
+  function runDiagnostic(){
+    var cfg = getServerConfig();
+    var domain = cfg ? cfg.host : '0.peerjs.com';
+    var port = cfg ? (cfg.port || 443) : 443;
+    var protocol = (cfg && cfg.secure !== false) ? 'https' : 'http';
+    var url = protocol + '://' + domain + ':' + port + '/peerjs/id?ts=' + Date.now();
+ 
+    diagLine.textContent = 'Diagnostic probe to ' + url + '…';
+    var settled = false;
+ 
+    var timer = setTimeout(function(){
+      if(settled) return;
+      settled = true;
+      diagLine.textContent = 'Diagnostic: no response from ' + domain + ' after 6s (silent drop / firewall).';
+    }, 6000);
+ 
+    fetch(url, { cache: 'no-store' }).then(function(res){
+      if(settled) return;
+      settled = true;
+      clearTimeout(timer);
+      res.text().then(function(txt){
+        diagLine.textContent = 'Diagnostic: ' + domain + ' replied (status ' + res.status + '). Server reachable!';
+      });
+    }).catch(function(err){
+      if(settled) return;
+      settled = true;
+      clearTimeout(timer);
+      diagLine.textContent = 'Diagnostic: ' + domain + ' unreachable — ' + (err.message || err);
+    });
+  }
+ 
+  var libraryLoaded = false;
+  var PEER_LIB_SOURCES = [
+    'https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js',
+    'https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.5/peerjs.min.js' // Claude's addition
+  ];
+ 
+  function loadScriptOnce(url){
+    return new Promise(function(resolve, reject){
+      var s = document.createElement('script');
+      s.src = url;
+      s.onload = function(){ resolve(); };
+      s.onerror = function(){ reject(new Error('failed to load ' + url)); };
+      document.head.appendChild(s);
+    });
+  }
+ 
+  function loadPeerLibrary(sourceIndex){
+    var idx = sourceIndex || 0;
+    if(idx >= PEER_LIB_SOURCES.length){
+      return Promise.reject(new Error('all PeerJS CDN sources failed'));
+    }
+    var url = PEER_LIB_SOURCES[idx];
+    return loadScriptOnce(url).then(function(){
+      if(typeof Peer === 'undefined'){
+        throw new Error('script responded but did not define Peer: ' + url);
+      }
+    }).catch(function(err){
+      console.warn('PeerJS source failed, trying next:', url, err);
+      return loadPeerLibrary(idx + 1);
+    });
+  }
+ 
+  function startConnection(){
+    retryPeerBtn.classList.add('hidden');
+    if(libraryLoaded){
+      initPeer();
+      return;
+    }
+    setConnectStatus('Loading PeerJS library…', false);
+    diagLine.textContent = '';
+    loadPeerLibrary(0).then(function(){
+      libraryLoaded = true;
+      initPeer();
+    }).catch(function(){
+      setConnectStatus('Could not load the PeerJS library from any CDN. Try a different network or use the custom server to host it yourself.', true);
+      diagLine.textContent = 'All CDN sources failed: unpkg, jsdelivr, cdnjs.';
+      retryPeerBtn.classList.remove('hidden');
+    });
+  }
+ 
+  function initPeer(){
+    if(peer){ try{ peer.destroy(); }catch(e){} }
+    peerGeneration++;
+    var gen = peerGeneration;
+    everConnectedToServer = false;
+    conn = null;
+    myIdEl.textContent = 'generating…';
+    connectBtn.disabled = false;
+    retryPeerBtn.classList.add('hidden');
+    diagLine.textContent = '';
+    setConnectStatus('Connecting to signaling server…', false);
+ 
+    var cfg = getServerConfig();
+    var peerOpts = { debug: 1 };
+    if (cfg) {
+      peerOpts.host = cfg.host;
+      peerOpts.port = cfg.port;
+      peerOpts.path = cfg.path;
+      peerOpts.secure = cfg.secure;
+    }
+    peer = new Peer(undefined, peerOpts);
+ 
+    setTimeout(function(){
+      if(gen !== peerGeneration) return;
+      if(!everConnectedToServer){
+        setConnectStatus('Still can’t reach the connection server after 8s.', true);
+        retryPeerBtn.classList.remove('hidden');
+        runDiagnostic();
+      }
+    }, 8000);
+ 
+    peer.on('open', function(id){
+      if(gen !== peerGeneration) return;
+      everConnectedToServer = true;
+      myIdEl.textContent = id;
+      setConnectStatus('Ready. Share your ID, or paste your opponent’s below.', false);
+      retryPeerBtn.classList.add('hidden');
+      diagLine.textContent = '';
+    });
+    peer.on('connection', function(c){
+      if(gen !== peerGeneration) return;
+      if(conn){ try{ c.close(); }catch(e){} return; }
+      conn = c;
+      amIHost = true;
+      wireConnection();
+    });
+    peer.on('error', function(err){
+      if(gen !== peerGeneration) return;
+      console.error('PeerJS error:', err);
+      var type = (err && err.type) ? err.type : 'unknown';
+      setConnectStatus('Connection error (' + type + ').', true);
+      retryPeerBtn.classList.remove('hidden');
+      if(!everConnectedToServer) runDiagnostic();
+    });
+    peer.on('disconnected', function(){
+      if(gen !== peerGeneration) return;
+      if(everConnectedToServer){
+        setConnectStatus('Lost link to signaling server, reconnecting…', true);
+        try{ peer.reconnect(); }catch(e){}
+      } else {
+        setConnectStatus('Could not reach the connection server.', true);
+        retryPeerBtn.classList.remove('hidden');
+        runDiagnostic();
+      }
+    });
+  }
+ 
+  retryPeerBtn.addEventListener('click', function(){
+    startConnection();
+  });
+ 
+  connectBtn.addEventListener('click', function(){
+    var remoteId = remoteIdInput.value.trim();
+    if(!remoteId){ setConnectStatus('Enter a Peer ID first.', true); return; }
+    if(!peer || !peer.id){ setConnectStatus('Still connecting to server — try again in a moment.', true); return; }
+    setConnectStatus('Connecting…', false);
+    connectBtn.disabled = true;
+    conn = peer.connect(remoteId, { reliable: true });
+    amIHost = false;
+    wireConnection();
+  });
+ 
+  copyIdBtn.addEventListener('click', function(){
+    var id = myIdEl.textContent;
+    if(!id) return;
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(id).then(function(){
+        copyIdBtn.textContent = 'Copied!';
+        setTimeout(function(){ copyIdBtn.textContent = 'Copy'; }, 1400);
+      }).catch(function(){});
+    }
+  });
+ 
+  function wireConnection(){
+    conn.on('open', function(){
+      connectStatus.classList.remove('error');
+      connectStatus.textContent = 'Connected!';
+      initGameAfterConnect();
+    });
+    conn.on('data', handleData);
+    conn.on('close', function(){
+      handleDisconnect('Opponent disconnected.');
+    });
+    conn.on('error', function(err){
+      console.error('DataConnection error:', err);
+      handleDisconnect('Connection error — link lost.');
+    });
+  }
+ 
+  function handleDisconnect(message){
+    if(gamePhase === 'GAMEOVER') return;
+    gamePhase = 'DISCONNECTED';
+    statusText.textContent = message + ' Reload the page to start a new duel.';
+    callButtons.classList.add('hidden');
+    confirmSetBtn.classList.add('hidden');
+  }
+ 
+  function send(obj){
+    if(conn && conn.open){
+      try{ conn.send(obj); }catch(e){ /* ignore */ }
+    }
+  }
+ 
+  function handleData(data){
+    if(!data || !data.type) return;
+    switch(data.type){
+      case 'SET_CARDS': onSetCards(data); break;
+      case 'CALL': onCall(data); break;
+      case 'RESULT': onResult(data); break;
+      case 'NEW_GAME': newGame(false); break;
+    }
+  }
+ 
+  /* ===================== Game flow ===================== */
+  function initGameAfterConnect(){
+    connectScreen.classList.add('hidden');
+    gameScreen.classList.remove('hidden');
+    oppIdText.textContent = conn.peer;
+    newGame(false);
+  }
+ 
+  function newGame(broadcast){
+    myHP = 20; oppHP = 20; myBlock = 0; oppBlock = 0;
+    myDeck = shuffle(freshDeckTypes());
+    myDiscard = [];
+    myHand = [];
+    setSlots = [null, null, null];
+    gambleCard = null;
+    pendingResolution = null;
+    pendingSetCards = null;
+    pendingGambleUsed = false;
+ 
+    revealOverlay.classList.add('hidden');
+    endOverlay.classList.add('hidden');
+ 
+    if(broadcast) send({ type: 'NEW_GAME' });
+ 
+    if(amIHost){
+      myRole = 'setter';
+      startSetterTurn();
+    } else {
+      myRole = 'caller';
+      gamePhase = 'WAITING_FOR_SET';
+      renderAll();
+    }
+  }
+ 
+  function startSetterTurn(){
+    myBlock = 0;
+    setSlots = [null, null, null];
+    gambleCard = null;
+    drawToFive();
+    gamePhase = 'SETTING';
+    renderAll();
+  }
+ 
+  function isSetValid(){
+    if(setSlots.some(function(s){ return !s; })) return false;
+    return setSlots.some(function(s){ return s.type !== 'truth'; });
+  }
+ 
+  function confirmSet(){
+    if(!isSetValid()) return;
+    var cardsPayload = setSlots.map(function(s){ return s.type; });
+    var gambleUsed = !!gambleCard;
+    pendingResolution = { cards: cardsPayload, gambleUsed: gambleUsed };
+    send({ type: 'SET_CARDS', cards: cardsPayload, gamble: gambleUsed });
+    gamePhase = 'WAITING_FOR_CALL';
+    renderAll();
+  }
+ 
+  function onSetCards(data){
+    pendingSetCards = data.cards;
+    pendingGambleUsed = !!data.gamble;
+    gamePhase = 'CALLING';
+    renderAll();
+  }
+ 
+  function sendCall(guess){
+    send({ type: 'CALL', guess: guess });
+    gamePhase = 'WAITING_FOR_RESULT';
+    renderAll();
+  }
+ 
+  function onCall(data){
+    resolveCall(data.guess);
+  }
+ 
+  function resolveCall(guess){
+    var cards = pendingResolution.cards;
+    var gambleUsed = pendingResolution.gambleUsed;
+    var T = cards.filter(function(c){ return c === 'truth'; }).length;
+    var B = 3 - T;
+    var majority = (T > B) ? 'truths' : 'bluffs';
+    var callerWins = (guess === majority);
+    var winner = callerWins ? 'caller' : 'setter';
+ 
+    var baseBlock = 0, baseDamage = 0;
+    if(majority === 'truths'){ baseBlock = T; } else { baseDamage = B; }
+    var gambleDamage = gambleUsed ? B : 0;
+    var totalDamage = baseDamage + gambleDamage;
+ 
+    var setterHPv = myHP, setterBlockv = myBlock;
+    var callerHPv = oppHP, callerBlockv = oppBlock;
+ 
+    if(winner === 'setter'){ setterBlockv += baseBlock; }
+    else { callerBlockv += baseBlock; }
+ 
+    if(totalDamage > 0){
+      var dmg = totalDamage;
+      if(winner === 'setter'){
+        var absorbedC = Math.min(callerBlockv, dmg);
+        callerBlockv -= absorbedC; dmg -= absorbedC;
+        callerHPv = Math.max(0, callerHPv - dmg);
+      } else {
+        var absorbedS = Math.min(setterBlockv, dmg);
+        setterBlockv -= absorbedS; dmg -= absorbedS;
+        setterHPv = Math.max(0, setterHPv - dmg);
+      }
+    }
+ 
+    myHP = setterHPv; myBlock = setterBlockv;
+    oppHP = callerHPv; oppBlock = callerBlockv;
+ 
+    var resultMsg = {
+      type: 'RESULT', winner: winner,
+      baseBlock: baseBlock, baseDamage: baseDamage, gambleDamage: gambleDamage,
+      callerHP: callerHPv, setterHP: setterHPv,
+      callerBlock: callerBlockv, setterBlock: setterBlockv
+    };
+    send(resultMsg);
+ 
+    myDiscard.push.apply(myDiscard, cards);
+    if(gambleCard) myDiscard.push(gambleCard.type);
+    myDiscard.push.apply(myDiscard, myHand.map(function(c){ return c.type; }));
+    myHand = [];
+ 
+    showRevealThenContinue(cards, gambleUsed, resultMsg, true);
+  }
+ 
+  function onResult(msg){
+    myHP = msg.callerHP; myBlock = msg.callerBlock;
+    oppHP = msg.setterHP; oppBlock = msg.setterBlock;
+    showRevealThenContinue(pendingSetCards, pendingGambleUsed, msg, false);
+  }
+ 
+  function showRevealThenContinue(cards, gambleUsed, msg, iWasSetter){
+    gamePhase = 'REVEAL';
+    renderAll();
+    renderReveal(cards, gambleUsed, msg, iWasSetter);
+    revealOverlay.classList.remove('hidden');
+ 
+    setTimeout(function(){
+      revealOverlay.classList.add('hidden');
+      setSlots = [null, null, null];
+      gambleCard = null;
+      pendingSetCards = null;
+      pendingResolution = null;
+ 
+      if(myHP <= 0 || oppHP <= 0){
+        if(myHP <= 0 && oppHP <= 0) endGame('draw');
+        else if(myHP <= 0) endGame('lose');
+        else endGame('win');
+        return;
+      }
+ 
+      if(iWasSetter){
+        myRole = 'caller';
+        gamePhase = 'WAITING_FOR_SET';
+        renderAll();
+      } else {
+        myRole = 'setter';
+        startSetterTurn();
+      }
+    }, 2600);
+  }
+ 
+  function endGame(result){
+    gamePhase = 'GAMEOVER';
+    renderAll();
+    endTitle.textContent = result === 'win' ? 'You Win!' : (result === 'lose' ? 'You Lose' : "It's a Draw");
+    endOverlay.classList.remove('hidden');
+  }
+ 
+  newGameBtn.addEventListener('click', function(){ newGame(true); });
+  endNewGameBtn.addEventListener('click', function(){ newGame(true); });
+ 
+  /* ===================== Hand / slot manipulation ===================== */
+  function handById(id){
+    for(var i=0;i<myHand.length;i++){ if(myHand[i].id === id) return myHand[i]; }
+    return null;
+  }
+  function takeFromHand(id){
+    var idx = -1;
+    for(var i=0;i<myHand.length;i++){ if(myHand[i].id === id){ idx = i; break; } }
+    if(idx === -1) return null;
+    return myHand.splice(idx,1)[0];
+  }
+ 
+  function placeInSetSlot(cardId, slotIndex){
+    if(setSlots[slotIndex]) return false;
+    var card = takeFromHand(cardId);
+    if(!card) return false;
+    setSlots[slotIndex] = card;
+    renderAll();
+    return true;
+  }
+  function placeInGamble(cardId){
+    if(gambleCard) return false;
+    var card = handById(cardId);
+    if(!card || card.type !== 'gamble') return false;
+    takeFromHand(cardId);
+    gambleCard = card;
+    renderAll();
+    return true;
+  }
+  function removeSetSlot(slotIndex){
+    var c = setSlots[slotIndex];
+    if(!c) return;
+    setSlots[slotIndex] = null;
+    myHand.push(c);
+    renderAll();
+  }
+  function removeGamble(){
+    if(!gambleCard) return;
+    myHand.push(gambleCard);
+    gambleCard = null;
+    renderAll();
+  }
+  function autoPlace(cardId){
+    var card = handById(cardId);
+    if(!card) return;
+    var emptyIdx = -1;
+    for(var i=0;i<3;i++){ if(!setSlots[i]){ emptyIdx = i; break; } }
+    if(emptyIdx !== -1){ placeInSetSlot(cardId, emptyIdx); return; }
+    if(card.type === 'gamble' && !gambleCard){ placeInGamble(cardId); return; }
+    flashReject(handArea);
+  }
+ 
+  function flashReject(el){
+    if(!el) return;
+    el.classList.add('reject');
+    setTimeout(function(){ el.classList.remove('reject'); }, 320);
+  }
+ 
+  /* ===================== Drag & drop (pointer events) ===================== */
+  function dropTargetAt(x,y){
+    var el = document.elementFromPoint(x,y);
+    if(!el) return null;
+    return el.closest('.set-slot, .gamble-slot');
+  }
+  function clearHighlights(){
+    setSlotEls.forEach(function(s){ s.classList.remove('drop-hover'); });
+    gambleSlotEl.classList.remove('drop-hover');
+  }
+  function handleDropTarget(cardId, targetEl){
+    if(!targetEl) return;
+    if(targetEl.classList.contains('set-slot')){
+      var idx = Number(targetEl.dataset.slot);
+      if(setSlots[idx]){ flashReject(targetEl); return; }
+      placeInSetSlot(cardId, idx);
+    } else if(targetEl.classList.contains('gamble-slot')){
+      var card = handById(cardId);
+      if(!card || card.type !== 'gamble' || gambleCard){ flashReject(targetEl); return; }
+      placeInGamble(cardId);
+    }
+  }
+ 
+  function makeCardDraggable(el, cardId){
+    el.addEventListener('pointerdown', function(e){
+      if(gamePhase !== 'SETTING') return;
+      e.preventDefault();
+      var startX = e.clientX, startY = e.clientY;
+      var rect = el.getBoundingClientRect();
+      var ghost = el.cloneNode(true);
+      ghost.classList.add('dragging-ghost');
+      ghost.style.width = rect.width + 'px';
+      ghost.style.height = rect.height + 'px';
+      ghost.style.pointerEvents = 'none';
+      document.body.appendChild(ghost);
+      el.classList.add('drag-source-hidden');
+ 
+      function moveGhost(x,y){
+        ghost.style.left = (x - rect.width/2) + 'px';
+        ghost.style.top = (y - rect.height/2) + 'px';
+      }
+      moveGhost(startX, startY);
+ 
+      var moved = false;
+ 
+      function onMove(ev){
+        var dx = ev.clientX - startX, dy = ev.clientY - startY;
+        if(Math.hypot(dx,dy) > 8) moved = true;
+        moveGhost(ev.clientX, ev.clientY);
+        clearHighlights();
+        var t = dropTargetAt(ev.clientX, ev.clientY);
+        if(t) t.classList.add('drop-hover');
+      }
+      function onUp(ev){
+        window.removeEventListener('pointermove', onMove);
+        window.removeEventListener('pointerup', onUp);
+        clearHighlights();
+        ghost.remove();
+        el.classList.remove('drag-source-hidden');
+        if(moved){
+          var t = dropTargetAt(ev.clientX, ev.clientY);
+          if(t) handleDropTarget(cardId, t);
+        } else {
+          autoPlace(cardId);
+        }
+      }
+      window.addEventListener('pointermove', onMove);
+      window.addEventListener('pointerup', onUp, { once:true });
+    });
+  }
+ 
+  /* ===================== Rendering ===================== */
+  function statusFor(){
+    switch(gamePhase){
+      case 'WAITING_FOR_SET': return 'Opponent is choosing their cards…';
+      case 'SETTING': return 'Your turn — set 3 cards face-down';
+      case 'WAITING_FOR_CALL': return 'Cards locked in. Waiting for opponent\u2019s call…';
+      case 'CALLING': return 'Opponent set their cards. Call Truths or Bluffs!';
+      case 'WAITING_FOR_RESULT': return 'You called it. Awaiting reveal…';
+      case 'REVEAL': return 'Revealing…';
+      case 'GAMEOVER': return 'Duel finished.';
+      case 'DISCONNECTED': return statusText.textContent;
+      default: return 'Connecting…';
+    }
+  }
+ 
+  function renderAll(){
+    var myPct = Math.max(0, myHP)/20*100;
+    var oppPct = Math.max(0, oppHP)/20*100;
+    myHpFill.style.width = myPct + '%';
+    oppHpFill.style.width = oppPct + '%';
+    myHpFill.classList.toggle('low', myHP <= 6);
+    oppHpFill.classList.toggle('low', oppHP <= 6);
+    myHpText.textContent = Math.max(0,myHP) + ' / 20';
+    oppHpText.textContent = Math.max(0,oppHP) + ' / 20';
+    myBlockLabel.textContent = '\uD83D\uDEE1 ' + myBlock;
+    oppBlockLabel.textContent = '\uD83D\uDEE1 ' + oppBlock;
+ 
+    if(gamePhase !== 'DISCONNECTED'){
+      statusText.textContent = statusFor();
+    }
+ 
+    renderHand();
+    renderSetArea();
+    renderGamble();
+ 
+    var setting = gamePhase === 'SETTING';
+    confirmSetBtn.classList.toggle('hidden', !setting);
+    confirmSetBtn.disabled = !isSetValid();
+    setCaption.classList.toggle('hidden', !setting);
+ 
+    var calling = gamePhase === 'CALLING';
+    callButtons.classList.toggle('hidden', !calling);
+  }
+ 
+  function renderHand(){
+    handArea.innerHTML = '';
+    var setting = gamePhase === 'SETTING';
+    myHand.forEach(function(card){
+      var el = document.createElement('div');
+      el.className = 'card ' + card.type;
+      el.textContent = cardLabel(card.type);
+      if(setting){
+        makeCardDraggable(el, card.id);
+      } else {
+        el.style.cursor = 'default';
+      }
+      handArea.appendChild(el);
+    });
+  }
+ 
+  function renderSetArea(){
+    var setting = gamePhase === 'SETTING';
+ 
+    for(var i=0;i<3;i++){
+      var slotEl = setSlotEls[i];
+      slotEl.innerHTML = '';
+      slotEl.classList.remove('filled','waiting');
+ 
+      if(setting){
+        var card = setSlots[i];
+        if(card){
+          slotEl.classList.add('filled');
+          var cEl = document.createElement('div');
+          cEl.className = 'card small removable ' + card.type;
+          cEl.textContent = cardLabel(card.type);
+          (function(idx){
+            cEl.addEventListener('click', function(){ removeSetSlot(idx); });
+          })(i);
+          slotEl.appendChild(cEl);
+        } else {
+          var hint = document.createElement('span');
+          hint.className = 'slot-hint';
+          hint.textContent = 'Set';
+          slotEl.appendChild(hint);
+        }
+      } else if(gamePhase === 'WAITING_FOR_CALL'){
+        slotEl.classList.add('filled');
+        var backEl = document.createElement('div');
+        backEl.className = 'card small back';
+        backEl.textContent = '?';
+        slotEl.appendChild(backEl);
+      } else if(gamePhase === 'CALLING' || gamePhase === 'WAITING_FOR_RESULT'){
+        slotEl.classList.add('filled');
+        var backEl2 = document.createElement('div');
+        backEl2.className = 'card small back';
+        backEl2.textContent = '?';
+        slotEl.appendChild(backEl2);
+      } else if(gamePhase === 'WAITING_FOR_SET'){
+        slotEl.classList.add('waiting');
+        var hint2 = document.createElement('span');
+        hint2.className = 'slot-hint';
+        hint2.textContent = '\u2026';
+        slotEl.appendChild(hint2);
+      } else {
+        var hint3 = document.createElement('span');
+        hint3.className = 'slot-hint';
+        hint3.textContent = 'Set';
+        slotEl.appendChild(hint3);
+      }
+    }
+  }
+ 
+  function renderGamble(){
+    gambleSlotEl.innerHTML = '';
+    gambleSlotEl.classList.remove('filled');
+    var setting = gamePhase === 'SETTING';
+ 
+    if(setting){
+      if(gambleCard){
+        gambleSlotEl.classList.add('filled');
+        var cEl = document.createElement('div');
+        cEl.className = 'card small removable gamble';
+        cEl.textContent = 'G';
+        cEl.addEventListener('click', removeGamble);
+        gambleSlotEl.appendChild(cEl);
+      } else {
+        var hint = document.createElement('span');
+        hint.className = 'gamble-hint';
+        hint.textContent = 'Gamble';
+        gambleSlotEl.appendChild(hint);
+      }
+    } else if(gamePhase === 'CALLING' || gamePhase === 'WAITING_FOR_RESULT'){
+      if(pendingGambleUsed){
+        gambleSlotEl.classList.add('filled');
+        var gEl = document.createElement('div');
+        gEl.className = 'card small gamble';
+        gEl.textContent = 'G';
+        gambleSlotEl.appendChild(gEl);
+      } else {
+        var hint2 = document.createElement('span');
+        hint2.className = 'gamble-hint';
+        hint2.textContent = 'No Gamble';
+        gambleSlotEl.appendChild(hint2);
+      }
+    } else if(gamePhase === 'WAITING_FOR_CALL'){
+      if(gambleCard){
+        gambleSlotEl.classList.add('filled');
+        var gEl2 = document.createElement('div');
+        gEl2.className = 'card small gamble';
+        gEl2.textContent = 'G';
+        gambleSlotEl.appendChild(gEl2);
+      } else {
+        var hint3 = document.createElement('span');
+        hint3.className = 'gamble-hint';
+        hint3.textContent = 'Gamble';
+        gambleSlotEl.appendChild(hint3);
+      }
+    } else {
+      var hint4 = document.createElement('span');
+      hint4.className = 'gamble-hint';
+      hint4.textContent = 'Gamble';
+      gambleSlotEl.appendChild(hint4);
+    }
+  }
+ 
+  function renderReveal(cards, gambleUsed, msg, iWasSetter){
+    var T = cards.filter(function(c){ return c === 'truth'; }).length;
+    var B = 3 - T;
+    var majorityIsTruths = msg.baseBlock > 0;
+    var majorityLabel = majorityIsTruths ? 'Truths' : 'Bluffs';
+    var majorityCount = majorityIsTruths ? T : B;
+ 
+    var iAmWinner = (msg.winner === 'setter' && iWasSetter) || (msg.winner === 'caller' && !iWasSetter);
+ 
+    revealBanner.innerHTML = '';
+ 
+    var cardsRow = document.createElement('div');
+    cardsRow.className = 'reveal-cards';
+    cards.forEach(function(type){
+      var cEl = document.createElement('div');
+      cEl.className = 'card small ' + type;
+      cEl.textContent = cardLabel(type);
+      cardsRow.appendChild(cEl);
+    });
+    if(gambleUsed){
+      var gEl = document.createElement('div');
+      gEl.className = 'card small gamble';
+      gEl.textContent = 'G';
+      cardsRow.appendChild(gEl);
+    }
+    revealBanner.appendChild(cardsRow);
+ 
+    var headline = document.createElement('p');
+    headline.className = 'reveal-line headline';
+    headline.textContent = 'Majority: ' + majorityLabel + ' (' + majorityCount + ')';
+    revealBanner.appendChild(headline);
+ 
+    var outcome = document.createElement('p');
+    outcome.className = 'reveal-line';
+    outcome.textContent = iAmWinner ? 'You won the call!' : 'Your opponent won the call.';
+    revealBanner.appendChild(outcome);
+ 
+    var effects = [];
+    if(msg.baseBlock > 0) effects.push('+' + msg.baseBlock + ' Block');
+    if(msg.baseDamage > 0) effects.push(msg.baseDamage + ' damage');
+    if(msg.gambleDamage > 0) effects.push('+' + msg.gambleDamage + ' Gamble damage');
+    if(effects.length){
+      var eff = document.createElement('p');
+      eff.className = 'reveal-line effect';
+      eff.textContent = effects.join(' · ');
+      revealBanner.appendChild(eff);
+    }
+  }
+ 
+  /* ===================== Button wiring ===================== */
+  confirmSetBtn.addEventListener('click', confirmSet);
+  callTruthsBtn.addEventListener('click', function(){ sendCall('truths'); });
+  callBluffsBtn.addEventListener('click', function(){ sendCall('bluffs'); });
+ 
+  /* ===================== Boot ===================== */
+  startConnection();
+})();
+</script>
+</body>
+</html>
