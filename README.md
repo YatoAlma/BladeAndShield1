@@ -51,7 +51,7 @@ The game includes a built‑in **Advanced** panel so you can point it to your ow
 
 ### Quick Start (using the default server)
 
-1. Open `[index.html](https://yatoalma.github.io/BladeAndShield1/)` in your browser.  
+1. Open [index.html](https://yatoalma.github.io/BladeAndShield1/) in your browser.  
 2. Wait for your **Peer ID** to appear.  
 3. Share your ID with your opponent (via chat, email, etc.).  
 4. Your opponent pastes your ID and clicks **Connect**.  
